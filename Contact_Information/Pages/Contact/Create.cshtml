@@ -1,0 +1,56 @@
+﻿@page
+@model Contact_Information.Pages.Contact.CreateModel
+
+
+
+<h1>Create</h1>
+
+<h4>Contacts</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Contacts.Name" class="control-label"></label>
+                <input asp-for="Contacts.Name" class="form-control" />
+                <span asp-validation-for="Contacts.Name" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Contacts.Address" class="control-label"></label>
+                <input asp-for="Contacts.Address" class="form-control" />
+                <span asp-validation-for="Contacts.Address" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Contacts.Tel" class="control-label"></label>
+                <input asp-for="Contacts.Tel" class="form-control" />
+                <span asp-validation-for="Contacts.Tel" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Contacts.Mobile" class="control-label"></label>
+                <input asp-for="Contacts.Mobile" class="form-control" />
+                <span asp-validation-for="Contacts.Mobile" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Contacts.Email" class="control-label"></label>
+                <input asp-for="Contacts.Email" class="form-control" />
+                <span asp-validation-for="Contacts.Email" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label class="control-label">Country</label>
+                <select id="IFSEmpId" asp-for="Contacts.CountryId" class="select2dropdown form-control col-md-6" asp-items="@Model.CountryList" required></select>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-page="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

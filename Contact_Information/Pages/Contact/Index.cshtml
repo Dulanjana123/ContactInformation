@@ -1,0 +1,62 @@
+﻿@page
+@model Contact_Information.Pages.Contact.IndexModel
+
+<h1>Contact Information</h1>
+
+<p>
+    <a asp-page="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.ContactsDTO[0].Name)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ContactsDTO[0].Address)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ContactsDTO[0].Tel)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ContactsDTO[0].Mobile)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ContactsDTO[0].Email)
+            </th>
+            <th>
+                Country
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model.ContactsDTO) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Address)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Tel)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Mobile)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Email)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Countries.Country)
+            </td>   
+            <td>
+                <a asp-page="./Edit" asp-route-id="@item.ContactId">Edit</a> |
+                <a asp-page="./Details" asp-route-id="@item.ContactId">Details</a> |
+                <a asp-page="./Delete" asp-route-id="@item.ContactId">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
