@@ -14,6 +14,8 @@ namespace Contact_Information.Configurations
 
             CreateMap<User, UserDTO>().ReverseMap();
             CreateMap<Location, LocationDTO>().ReverseMap();
+            CreateMap<User, SaveUserDTO>().ReverseMap();
+            CreateMap<User, UpdateUserDTO>().ReverseMap(); 
             //CreateMap<UserLocation, UserLocationDTO>().ReverseMap();
         }
     }

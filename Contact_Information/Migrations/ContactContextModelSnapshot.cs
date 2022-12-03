@@ -91,7 +91,10 @@ namespace Contact_Information.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int>("LocationId")
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<int?>("LocationId")
                         .HasColumnType("int");
 
                     b.Property<string>("UserName")
@@ -115,9 +118,7 @@ namespace Contact_Information.Migrations
                 {
                     b.HasOne("Contact_Information.Model.Location", "Location")
                         .WithMany()
-                        .HasForeignKey("LocationId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("LocationId");
                 });
 #pragma warning restore 612, 618
         }

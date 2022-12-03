@@ -1,7 +1,9 @@
 
 using AutoMapper;
 using Contact_Information.Configurations;
+using Contact_Information.Controllers.Users;
 using Contact_Information.Data;
+using Contact_Information.Interfaces.Users;
 using Contact_Information.IRepository;
 using Contact_Information.Repository;
 using Microsoft.AspNetCore.Builder;
@@ -37,6 +39,7 @@ namespace Contact_Information
             services.AddAutoMapper(typeof(MapperInitilizer));
             //Unit of work(repo list)
             services.AddTransient<IUnitOfWork, UnitOfWork>();
+            //services.AddScoped<IUsersController, UsersController>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

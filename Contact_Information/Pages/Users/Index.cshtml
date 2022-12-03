@@ -2,47 +2,335 @@
 @model Contact_Information.Pages.Users.IndexModel
 
 
-<h1>Contact Information</h1>
+@{
+    ViewData["Title"] = "Index";
 
-<p>
-    <a asp-page="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.UserDTO[0].UserId)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.UserDTO[0].UserName)
-            </th>
+    List<object> commands = new List<object>();
 
-            <th>
-                Location
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model.UserDTO)
-        {
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.UserId)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.UserName)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Location.LocationName)
-                </td>
-                <td>
-                    <a asp-page="./Edit" asp-route-id="@item.UserId">Edit</a> |
-                    <a asp-page="./Details" asp-route-id="@item.UserId">Details</a> |
-                    <a asp-page="./Delete" asp-route-id="@item.UserId">Delete</a>
-                </td>
-            </tr>
+    commands.Add(new { buttonOption = new { content = "View", cssClass = "e-info", id = "viewBtn" } });
+    //commands.Add(new { buttonOption = new { content = "Edit", cssClass = "e-info", id = "editBtn" } });
+
+     ViewData["Title"] = "DialogTemplate";
+
+}
+
+
+
+<div class="form-content" >
+    <div class="inner-form">
+        <h1>User Creation</h1>
+        <hr/>
+        <form method="post">
+            <div class="row " >
+                <div class="col-12">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    <div class="form-group">
+                        <label>Username</label>
+                        <input asp-for="SaveUserDTO.UserName" class="form-control col-md-6" required/>
+                        <span asp-validation-for="SaveUserDTO.UserName" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Location</label>
+                        <span asp-validation-for="SaveUserDTO.LocationId" class="text-danger"></span>
+                        <select id="LocationId" asp-for="SaveUserDTO.LocationId" class="select2dropdown form-control col-md-6" asp-items="@Model.locationList" required></select>
+                    </div>
+
+                    <div class="form-group">
+                        <button id="submit button" type="submit">Save</button>
+                    </div>
+
+                </div>
+
+            </div>
+        </form>
+
+
+        <div>
+            <ejs-grid id="GridUsers"  allowPaging="true" commandClick="commandClick"  allowSorting="true" allowSelection="false" allowFiltering="true" height="400" allowResizing="true" load="onLoad" >
+            <e-grid-editsettings showConfirmDialog="true" allowEditing="true" allowAdding="true"> </e-grid-editsettings>
+            <e-data-manager url="" adaptor="UrlAdaptor"></e-data-manager>
+            <e-grid-pageSettings pageCount="8" pageSize="50"></e-grid-pageSettings>
+            <e-grid-filtersettings type="Excel" enableCaseSensitivity="false"></e-grid-filtersettings>
+            <e-grid-columns>
+                <e-grid-column  field="userId" headerText="User Id" allowResizing="true" allowEditing="false"  isPrimaryKey="true"></e-grid-column>
+                <e-grid-column  field="userName" headerText="Username" allowResizing="true" allowEditing="false"></e-grid-column>
+                <e-grid-column  field="location.locationName" headerText="Location" allowResizing="true" allowEditing="false"></e-grid-column>
+                
+                <e-grid-column width="80" field="isActive" headerText="Is Active" editType="booleanedit" displayAsCheckBox="true" type="boolean"></e-grid-column>
+                <e-grid-column  width="80" field="Activity" headerText="Activity" allowResizing="true" commands="commands"></e-grid-column>
+            </e-grid-columns>
+            </ejs-grid> 
+        </div>
+    </div>    
+
+    @*Modal starts here*@
+    <div class="modal fade" id="UserEditModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+
+      <form method="post">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">User Edit</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body" id="modal_body">
+              <div class="form-group">
+                <label for="recipient-name" class="col-form-label">Id:</label>
+                <input type="text" class="form-control" id="UserId" readonly="readonly">
+              </div>
+              <div class="form-group">
+                <label for="recipient-name" class="col-form-label">Username:</label>
+                <input type="text" class="form-control" id="Username">
+              </div>
+              <div class="form-group">
+                <label for="recipient-name" class="col-form-label">Location:</label>
+                <input type="text" class="form-control" id="Location" readonly="readonly">
+              </div>
+              <div class="form-group">
+                <label for="recipient-name" class="col-form-label" hidden>Location Id:</label>
+                <input type="text" class="form-control" id="LocationId" readonly="readonly" hidden>
+              </div>
+              <div class="form-check">
+                  <input class="form-check-input" type="checkbox"  id="IsActive"/>
+                  <label class="form-check-label" for="flexCheckIndeterminate">
+                    Is Active
+                  </label>
+              </div>
+              @*<div class="form-group">
+                  <label for="recipient-name" class="col-form-label">Is Active:</label>
+                  <input class="form-check-input" type="checkbox" id="IsActive">
+              </div>*@
+              @*<div class="form-group">
+                <label for="recipient-name" class="col-form-label">Location:</label>*@
+                @*<input type="text" class="form-control" id="Location">*@
+                @*<select id="Location"  class="form-control col-md-4"></select>*@
+                @*<select id="Location" class="form-control">                                             
+                    <option value="">Location</option>
+                </select> *@
+              @*</div>*@
+          </div>
+          <div class="modal-footer">
+            <button type="button" id="updatebtn" class="btn btn-success btn-sm">Update</button>
+            <input type="button" id="btnClosePopup" value="Close" data-dismiss="modal" class="btn btn-danger btn-sm" />
+          </div>
+        </div>
+       </form>
+
+
+      </div>
+    </div>
+    @*Modal ends here*@
+
+</div>
+
+
+
+
+
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+    <script id='dialogtemplate' type="text/x-template">
+        <div id="dialogTemp">
+        </div>
+    </script>
+
+    <script src="~/lib/jquery/dist/jquery.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.js"></script>
+    <link href="~/lib/bootstrap/dist/css/bootstrap.css" rel="stylesheet" />
+    <script type="text/javascript">
+    var updateUserDTO = [];
+
+     $('#loading-image').bind('ajaxStart', function () {
+            $(this).show();
+        }).bind('ajaxStop', function () {
+            $(this).hide();
+        });
+
+        function onLoad() {
+            this.dataSource.dataSource.headers = [{ 'XSRF-TOKEN': $("input:hidden[name='__RequestVerificationToken']").val() }];
         }
-    </tbody>
-</table>
 
+    
+     $(document).ready(function () {
+            //when document load call this function
+            userDetailsReload();
+     });
+
+     
+
+    //Grid data load function
+        function userDetailsReload() {
+                $.ajax({
+                type: "GET",
+                url: "@Url.Page("/Users/Index/")?handler=UserDetails",
+                contentType: "application/json",
+                success: function (response) {
+                    console.log(response);
+                    var grid1 = document.getElementById("GridUsers").ej2_instances[0];
+                    grid1.dataSource = response;
+                    grid1.refresh();
+                },
+                error: function (data) {
+                    alert("Sorry cannot load data. Please check and try again");
+                },
+            });
+        }
+
+        //View user
+        function commandClick(args) {
+            if (args.commandColumn.buttonOption.id === "viewBtn") {
+                var objData = JSON.stringify(args.rowData);
+                var objValues = JSON.parse(objData);
+                var dataList = objValues;
+                var userId = dataList.userId
+                var userName = dataList.userName
+                var location = dataList.location.locationName
+                var locationId = dataList.locationId
+                var isActive = dataList.isActive
+                $("#UserId").val(userId);
+                $("#Username").val(userName);
+                $("#Location").val(location);
+                $("#LocationId").val(locationId);
+
+                var myCheck = isActive
+                if (myCheck == true) {
+                    $( "#IsActive").prop('checked', true);
+                } else {
+                    $( "#IsActive").prop('checked', false);
+                }
+                
+                //var mySelect = $("#Location");
+                //$.each(location, function(val, text) {
+                //    mySelect.append(
+                //        $('<option></option>').val(val).html(text)
+                //    );
+                //});
+
+                $('#UserEditModal').modal('show');
+            }
+        }
+            //else if(args.commandColumn.buttonOption.id === "editBtn"){
+
+            //    $('#UserEditModal').modal('hide');
+            //    var objData = JSON.stringify(args.rowData);
+            //    var objValues = JSON.parse(objData);
+            //    var dataList = objValues;
+            //    var userId = dataList.userId
+            //    var userName = dataList.userName
+            //    var location = dataList.location
+            //    $("#UserId").val(userId);
+            //    $("#Username").val(userName);
+            //    $("#Location").val(location);
+            //    $('#UserEditModal').modal('show');
+
+                //$.ajax({
+                //    type: 'POST',
+                //    url: "@Url.Page("/Users/Index/")?handler=UpdateUser",
+                //    contentType: "application/json",
+                //    data: { "updateUserDTO": args.data },
+                //    success: function (response) {
+                //    },
+                //    error: function (data) {
+                //        alert("Cannot Load data" + data);
+                //    },
+                //});
+
+            //}
+        
+
+        //update user
+        $(function() {
+            $('#updatebtn').click(function() {
+                
+                var dataList = {};
+        
+                dataList.UserId = $("#UserId").val();
+                dataList.UserName = $("#Username").val();
+                dataList.LocationId = $("#LocationId").val();
+                dataList.IsActive;
+
+                if ($('#IsActive').is(":checked")) {
+                    dataList.IsActive = true;
+                }
+                else {
+                    dataList.IsActive = false;
+                }
+
+                console.log(dataList);
+
+                const swalWithBootstrapButtons = Swal.mixin({
+                  customClass: {
+                    confirmButton: 'btn btn-success',
+                    cancelButton: 'btn btn-danger'
+                  },
+                  buttonsStyling: false
+                })
+
+                swalWithBootstrapButtons.fire({
+                  title: 'Are you sure?',
+                  text: "You won't be able to revert this!",
+                  icon: 'warning',
+                  showCancelButton: true,
+                  confirmButtonText: 'Yes, peoceed it!',
+                  cancelButtonText: 'No, cancel!',
+                  reverseButtons: true
+                }).then((result) => {
+                  if (result.isConfirmed) {
+                   
+                 $.ajax({
+                 type: "POST",
+                 url: "@Url.Page("/Users/Index/")?handler=UpdateUser",
+                 headers:
+                 {
+                     "RequestVerificationToken": $('input:hidden[name="__RequestVerificationToken"]').val()
+                 },
+                 beforeSend: function (xhr) {
+                     xhr.setRequestHeader("XSRF-TOKEN",
+                         $('input:hidden[name="__RequestVerificationToken"]').val());
+                 },
+                 data: { "updateUserDTO": dataList },
+                 success: function(r) {
+                         swalWithBootstrapButtons.fire(
+                            'Edited!',
+                            'Records Successfully Edited!.',
+                            'success'
+                        )
+                         userDetailsReload();
+
+                 },
+                  error: function (data) {
+                     //alert("Cannot Load data" + data);
+                     swalWithBootstrapButtons.fire(
+                            'Sorry!',
+                            'There is an issue on editing record. Please check and try again.',
+                            'error'
+                        )
+                     userDetailsReload();
+                 }
+                 });
+                  } else if (
+                    /* Read more about handling dismissals below */
+                    result.dismiss === Swal.DismissReason.cancel
+                  ) {
+                    swalWithBootstrapButtons.fire(
+                      'Cancelled',
+                      'Edit cancelled',
+                      'error'
+                    )
+                  }
+                })
+        
+
+        
+            });
+        });
+               
+    </script>
+}
+
+    

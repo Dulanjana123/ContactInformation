@@ -7,10 +7,11 @@ namespace Contact_Information.DTOs
 {
     public class UserDTO
     {
-        public int UserId { get; set; }
+        public int UserId { get; set;}
         public string UserName { get; set; }
-        public int LocationId { get; set; }
+        public int? LocationId { get; set; }
         public LocationDTO Location { get; set; }
+        public bool IsActive { get; set; }
     }
 }
 
